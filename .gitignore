@@ -1,0 +1,109 @@
+# ================================
+# Global ignores
+# ================================
+.DS_Store
+Thumbs.db
+*.log
+*.env
+.env.*
+.vscode/
+.idea/
+
+# ================================
+# Node.js (server + client)
+# ================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Vite / React build files
+dist/
+build/
+.cache/
+coverage/
+
+# ================================
+# Python (ml-backend)
+# ================================
+# Virtual environment
+venv/
+.venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+coverage.*
+.cache
+pytest_cache/
+.pytest_cache/
+*.cover
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# ================================
+# Misc
+# ================================
+# Logs
+logs/
+*.log
+
+# Environment & secrets
+*.env
+.env.local
+.env.production
+.env.development
+secrets.json
+
+# OS files
+ehthumbs.db
+Icon?
+desktop.ini
+
+# ================================
+# Project specific
+# ================================
+# Ignore local ML model artifacts
+ml-backend/model/
+ml-backend/__pycache__/
+ml-backend/venv/
+ml-backend/*.pth
+ml-backend/*.pkl
+
+# Ignore frontend dependencies
+client/node_modules/
+client/dist/
+client/.vite/
+client/.next/
+
+# Ignore backend dependencies
+server/node_modules/
+server/.env
+server/logs/
+
+# If you ever build Docker images
+docker-compose.yml
+Dockerfile
