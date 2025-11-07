@@ -161,11 +161,44 @@ const DemoPage = () => {
                         <span className="text-3xl mr-3">📊</span>
                         Prediction Results
                     </h2>
-                    <p className="text-gray-600 mb-6">
-                        Found <strong>{predictions.length}</strong> predicted GO terms with high confidence scores:
-                    </p>
+
+                    {/* Threshold Info Banner */}
+                    <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-semibold text-purple-900">
+                                    🎯 Confidence Threshold: <span className="text-purple-600">0.7 (70%)</span>
+                                </p>
+                                <p className="text-xs text-gray-600 mt-1">
+                                    Only showing predictions with probability greater than 0.7
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-2xl font-bold text-purple-600">{predictions.filter(p => p.probability > 0.7).length}</p>
+                                <p className="text-xs text-gray-600">High-confidence<br />predictions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {predictions.filter(p => p.probability > 0.7).length === 0 && (
+                        <div className="p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg">
+                            <p className="text-yellow-800 font-medium">
+                                ⚠️ No predictions above threshold (0.7)
+                            </p>
+                            <p className="text-sm text-yellow-700 mt-2">
+                                The model did not find any GO terms with confidence greater than 70% for this sequence.
+                                Try a different protein sequence.
+                            </p>
+                        </div>
+                    )}
+
+                    {predictions.filter(p => p.probability > 0.7).length > 0 && (
+                        <p className="text-gray-600 mb-6">
+                            Found <strong>{predictions.filter(p => p.probability > 0.7).length}</strong> GO term predictions with probability <strong>&gt; 0.7</strong>:
+                        </p>
+                    )}
                     <div className="space-y-4">
-                        {predictions.map((pred, idx) => (
+                        {predictions.filter(p => p.probability > 0.7).map((pred, idx) => (
                             <div
                                 key={idx}
                                 className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow"
