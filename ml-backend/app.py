@@ -55,38 +55,69 @@ class ModelManager:
         # ========================================
         print("\n🎯 Loading Model 1...")
         
-        # TODO: Replace this with your Model 1 loading code
-        # Example:
-        self.model_1 = torch.load('models/Model_1.pth', map_location=self.device)
-        self.model_1.eval()
-        
-        # self.model_1 = None  # REPLACE THIS with your actual model
-        # print("⚠️  Model 1 not loaded yet - add your loading code!")
+        model1_path = 'models/Model_1.pth'
+        if os.path.exists(model1_path):
+            try:
+                self.model_1 = torch.load(model1_path, map_location=self.device)
+                self.model_1.eval()
+                print("✅ Model 1 loaded successfully!")
+            except Exception as e:
+                print(f"❌ Error loading Model 1: {e}")
+                self.model_1 = None
+        else:
+            self.model_1 = None
+            print(f"⚠️  Model 1 not found at '{model1_path}'")
+            print("   Please place your Model_1.pth file in the models/ folder")
         
         # ========================================
         # MODEL 2: Intermediate → GO Predictions
         # ========================================
         print("\n🎯 Loading Model 2...")
         
-        # TODO: Replace this with your Model 2 loading code
-        # Example:
-        self.model_2 = torch.load('models/Model_2.pth', map_location=self.device)
-        self.model_2.eval()
-        
-        # self.model_2 = None  # REPLACE THIS with your actual model
-        # print("⚠️  Model 2 not loaded yet - add your loading code!")
+        model2_path = 'models/Model_2.pth'
+        if os.path.exists(model2_path):
+            try:
+                self.model_2 = torch.load(model2_path, map_location=self.device)
+                self.model_2.eval()
+                print("✅ Model 2 loaded successfully!")
+            except Exception as e:
+                print(f"❌ Error loading Model 2: {e}")
+                self.model_2 = None
+        else:
+            self.model_2 = None
+            print(f"⚠️  Model 2 not found at '{model2_path}'")
+            print("   Please place your Model_2.pth file in the models/ folder")
         
         # ========================================
         # LOAD GO TERM MAPPING
         # ========================================
         print("\n📚 Loading GO term mapping...")
         
-        # TODO: Replace with your actual GO mapping file
-        # with open('go_terms_mapping.json', 'r') as f:
-        #     self.go_mapping = json.load(f)
+        go_mapping_path = 'go_terms_mapping.json'
+        if os.path.exists(go_mapping_path):
+            try:
+                with open(go_mapping_path, 'r') as f:
+                    self.go_mapping = json.load(f)
+                print(f"✅ Loaded {len(self.go_mapping)} GO terms from file")
+            except Exception as e:
+                print(f"❌ Error loading GO mapping: {e}")
+                self.go_mapping = self._get_default_go_mapping()
+        else:
+            print(f"⚠️  GO mapping not found at '{go_mapping_path}'")
+            print("   Using default GO terms (please create go_terms_mapping.json)")
+            self.go_mapping = self._get_default_go_mapping()
         
-        # Placeholder GO mapping - REPLACE THIS
-        self.go_mapping = {
+        # List of GO terms in same order as model output
+        self.go_terms_list = list(self.go_mapping.keys())
+        
+        print(f"✅ Loaded {len(self.go_terms_list)} GO terms")
+        print("=" * 60)
+        print("🎉 SETUP COMPLETE!")
+        print("=" * 60)
+    
+    def _get_default_go_mapping(self):
+        """Returns default GO term mapping for testing"""
+        return {
             "GO:0009274": {"name": "Peptidoglycan-based cell wall", "ontology": "CC"},
             "GO:0071944": {"name": "Cell periphery", "ontology": "CC"},
             "GO:0031625": {"name": "Ubiquitin protein ligase binding", "ontology": "MF"},
@@ -96,14 +127,6 @@ class ModelManager:
             "GO:0003677": {"name": "DNA binding", "ontology": "MF"},
             "GO:0046872": {"name": "Metal ion binding", "ontology": "MF"},
         }
-        
-        # List of GO terms in same order as model output
-        self.go_terms_list = list(self.go_mapping.keys())
-        
-        print(f"✅ Loaded {len(self.go_terms_list)} GO terms")
-        print("=" * 60)
-        print("🎉 SETUP COMPLETE!")
-        print("=" * 60)
     
     def get_embedding(self, sequence: str, seq_id: str):
         """

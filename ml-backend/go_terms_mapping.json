@@ -1,0 +1,34 @@
+{
+    "GO:0009274": {
+        "name": "Peptidoglycan-based cell wall",
+        "ontology": "CC"
+    },
+    "GO:0071944": {
+        "name": "Cell periphery",
+        "ontology": "CC"
+    },
+    "GO:0031625": {
+        "name": "Ubiquitin protein ligase binding",
+        "ontology": "MF"
+    },
+    "GO:0006281": {
+        "name": "DNA repair",
+        "ontology": "BP"
+    },
+    "GO:0005524": {
+        "name": "ATP binding",
+        "ontology": "MF"
+    },
+    "GO:0016020": {
+        "name": "Membrane",
+        "ontology": "CC"
+    },
+    "GO:0003677": {
+        "name": "DNA binding",
+        "ontology": "MF"
+    },
+    "GO:0046872": {
+        "name": "Metal ion binding",
+        "ontology": "MF"
+    }
+}
