@@ -57,11 +57,11 @@ class ModelManager:
         
         # TODO: Replace this with your Model 1 loading code
         # Example:
-        # self.model_1 = torch.load('models/model_1.pth', map_location=self.device)
-        # self.model_1.eval()
+        self.model_1 = torch.load('models/Model_1.pth', map_location=self.device)
+        self.model_1.eval()
         
-        self.model_1 = None  # REPLACE THIS with your actual model
-        print("⚠️  Model 1 not loaded yet - add your loading code!")
+        # self.model_1 = None  # REPLACE THIS with your actual model
+        # print("⚠️  Model 1 not loaded yet - add your loading code!")
         
         # ========================================
         # MODEL 2: Intermediate → GO Predictions
@@ -70,11 +70,11 @@ class ModelManager:
         
         # TODO: Replace this with your Model 2 loading code
         # Example:
-        # self.model_2 = torch.load('models/model_2.pth', map_location=self.device)
-        # self.model_2.eval()
+        self.model_2 = torch.load('models/Model_2.pth', map_location=self.device)
+        self.model_2.eval()
         
-        self.model_2 = None  # REPLACE THIS with your actual model
-        print("⚠️  Model 2 not loaded yet - add your loading code!")
+        # self.model_2 = None  # REPLACE THIS with your actual model
+        # print("⚠️  Model 2 not loaded yet - add your loading code!")
         
         # ========================================
         # LOAD GO TERM MAPPING
