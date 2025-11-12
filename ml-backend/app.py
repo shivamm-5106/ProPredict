@@ -363,8 +363,8 @@ def run_complete_pipeline(sequence: str, seq_id: str, threshold=0.5):
     }
 # ==================== API Models ====================
 class ProteinInput(BaseModel):
-    seq_id: str
     sequence: str
+    seq_id: str = None
 class PipelineResponse(BaseModel):
     seq_id: str
     sequence: str
@@ -393,15 +393,17 @@ def health_check():
     }
 @app.post("/api/analyze", response_model=PipelineResponse)
 async def analyze_protein(protein_input: ProteinInput):
-    """
-    Run complete 3-model pipeline:
-    1. ESM2 Embedding Generation (640-dim)
-    2. Neural Network Prediction (26121-dim output)
-    3. Multilabel Function Classification (PKL)
-    """
+    """Run complete 3-model pipeline"""
     try:
-        seq_id = protein_input.seq_id
         sequence = protein_input.sequence.upper().strip()
+        
+        # Auto-generate seq_id if not provided (using hash of sequence)
+        if protein_input.seq_id:
+            seq_id = protein_input.seq_id
+        else:
+            import hashlib
+            seq_id = f"seq_{hashlib.md5(sequence.encode()).hexdigest()[:8]}"
+            print(f"ℹ️ Auto-generated seq_id: {seq_id}")
         
         # Validate sequence
         valid_amino_acids = set("ACDEFGHIKLMNPQRSTVWY")
