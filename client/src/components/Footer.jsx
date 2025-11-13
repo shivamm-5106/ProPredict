@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="border-t border-border bg-card/50 backdrop-blur-md">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
           <div>
             <h3 className="text-lg font-orbitron font-bold mb-4 gradient-text">ProPredict</h3>
             <p className="text-sm text-muted-foreground">

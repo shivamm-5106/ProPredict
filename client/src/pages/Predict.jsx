@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-const DemoPage = () => {
+const Predict = () => {
     const [inputType, setInputType] = useState('text')
     const [sequence, setSequence] = useState('')
     const [file, setFile] = useState(null)
@@ -248,4 +248,4 @@ const DemoPage = () => {
         </div>
     )
 }
-export default DemoPage
+export default Predict
