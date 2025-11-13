@@ -92,6 +92,7 @@ ml-backend/__pycache__/
 ml-backend/venv/
 ml-backend/*.pth
 ml-backend/*.pkl
+ml-backend/*.pt
 
 # Ignore frontend dependencies
 client/node_modules/

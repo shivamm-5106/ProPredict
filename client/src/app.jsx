@@ -13,10 +13,19 @@ function App() {
 
     const [model3Status, setModel3Status] = useState('Waiting');
     const [model3Data, setModel3Data] = useState(null);
-    const validateSequence = (seq) => {
-        const validAminoAcids = /^[ACDEFGHIKLMNPQRSTVWY]+$/i;
-        return validAminoAcids.test(seq);
-    };
+    const validateSequence  = (seq) => {
+    if (!seq || typeof seq !== 'string') {
+        return false;
+    }
+    const cleanedSeq = seq.replace(/\s/g, '');
+    if (cleanedSeq.length === 0) {
+        return false;
+    }
+
+    // Added B, Z, J, and X to the set of allowed characters
+    const validAminoAcids = /^[ACDEFGHIKLMNPQRSTVWYBZX]+$/i;
+    return validAminoAcids.test(cleanedSeq);
+};
     const handleAnalyze = async () => {
         if (!sequence.trim()) {
             alert('Please provide a protein sequence');
