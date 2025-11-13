@@ -1,22 +1,44 @@
-import React from 'react'
+import { Github, Mail, FileText } from "lucide-react";
+
 const Footer = () => {
-    return (
-        <footer className="bg-gray-800 text-white py-8 mt-16">
-            <div className="max-w-6xl mx-auto px-4 text-center">
-                <p className="mb-2">
-                    <strong>Protein Function Prediction Project</strong> | CAFA 6 Challenge
-                </p>
-                <p className="text-gray-400 text-sm mb-4">
-                    Advancing computational biology through AI-powered protein function annotation
-                </p>
-                <p className="text-gray-500 text-xs">
-                    © 2024 ProteinPredict Research Team. Demo application for educational purposes.
-                </p>
-                <div className="mt-4 text-sm text-gray-400">
-                    <p>Built with React • Node.js • Tailwind CSS</p>
-                </div>
+  return (
+    <footer className="border-t border-border bg-card/50 backdrop-blur-md">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="text-lg font-orbitron font-bold mb-4 gradient-text">ProPredict</h3>
+            <p className="text-sm text-muted-foreground">
+              AI-powered protein function prediction using state-of-the-art computational biology models.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Connect</h3>
+            <div className="flex space-x-4">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-secondary hover:bg-primary hover-glow transition-all"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+              <a
+                href="#"
+                className="p-2 rounded-lg bg-secondary hover:bg-primary hover-glow transition-all"
+              >
+                <FileText className="w-5 h-5" />
+              </a>
             </div>
-        </footer>
-    )
-}
-export default Footer
+          </div>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} ProPredict. All rights reserved. MIT License.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

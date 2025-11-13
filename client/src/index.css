@@ -1,60 +1,148 @@
+/* -------------------------------------------
+   TAILWIND BASE
+------------------------------------------- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* -------------------------------------------
+   DESIGN SYSTEM (YOUR NEW THEME)
+------------------------------------------- */
+@layer base {
+  :root {
+    /* Deep Navy to Electric Blue gradient theme */
+    --background: 207 100% 2.5%;
+    --foreground: 192 100% 95%;
+
+    --card: 207 100% 5%;
+    --card-foreground: 192 100% 95%;
+
+    --popover: 207 100% 8%;
+    --popover-foreground: 192 100% 95%;
+
+    --primary: 192 100% 43%;
+    --primary-foreground: 207 100% 2.5%;
+    --primary-glow: 192 100% 60%;
+
+    --secondary: 207 100% 20%;
+    --secondary-foreground: 192 100% 95%;
+
+    --muted: 207 100% 11%;
+    --muted-foreground: 192 50% 70%;
+
+    --accent: 192 100% 74%;
+    --accent-foreground: 207 100% 2.5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 207 100% 15%;
+    --input: 207 100% 11%;
+    --ring: 192 100% 43%;
+
+    --radius: 0.75rem;
+
+    /* Gradient definitions */
+    --gradient-primary: linear-gradient(135deg, hsl(207 100% 2.5%), hsl(192 100% 43%));
+    --gradient-secondary: linear-gradient(180deg, hsl(207 100% 5%), hsl(207 100% 11%));
+    --gradient-accent: linear-gradient(90deg, hsl(192 100% 43%), hsl(192 100% 74%));
+
+    /* Glow effects */
+    --glow-primary: 0 0 20px hsl(192 100% 43% / 0.5);
+    --glow-accent: 0 0 30px hsl(192 100% 74% / 0.6);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border box-border m-0 p-0;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', 'Poppins', sans-serif;
+    font-weight: 700;
+  }
+}
+
+/* -------------------------------------------
+   NEW UI COMPONENT UTILITIES
+------------------------------------------- */
+@layer components {
+  .glass-card {
+    @apply bg-card/40 backdrop-blur-md border border-border/50 rounded-xl;
+  }
+
+  .glow-text {
+    text-shadow: var(--glow-primary);
+  }
+
+  .hover-glow {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-glow:hover {
+    box-shadow: var(--glow-primary);
+  }
+
+  .gradient-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* -------------------------------------------
+   OLD PIPELINE UI ANIMATIONS (NEEDED)
+------------------------------------------- */
+
+/* Glow processing animation */
 @keyframes pulse-glow {
-
-    0%,
-    100% {
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-    }
-
-    50% {
-        box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
-    }
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+  }
 }
 
 .processing {
-    animation: pulse-glow 2s infinite;
+  animation: pulse-glow 2s infinite;
 }
 
+/* Slide-down reveal animation */
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .slide-down {
-    animation: slideDown 0.3s ease-out;
+  animation: slideDown 0.3s ease-out;
 }
 
+/* Code block styling used in pipeline outputs */
 .code-block {
-    font-family: 'Courier New', monospace;
-    background: #1e1e1e;
-    color: #d4d4d4;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    font-size: 0.875rem;
-    white-space: pre;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-family: 'Courier New', monospace;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  white-space: pre;
 }
