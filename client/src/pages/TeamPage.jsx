@@ -5,27 +5,27 @@ const TeamPage = () => {
     {
       name: "Antas Dubey",
       role: "Project Lead & ML Engineer",
-      image: "/team/Antas.png",
+      image: "/team/Antas.jpg",
     },
     {
-      name: "Archit Dubey",
-      role: "ML Engineer",
-      image: "/team/Archit.png",
+      name: "Archit Kumar Dubey",
+      role: "Principal Strategist & ML Engineer",
+      image: "/team/Archit.jpg",
     },
     {
       name: "Shivam",
-      role: "Backend Developer",
-      image: "/team/Shivam.png",
+      role: "Lead Backend Developer",
+      image: "/team/Shivam.jpg",
     },
     {
       name: "Vanshika Agarwal",
-      role: "Frontend Developer",
+      role: "Product Interface Developer",
       image: "/team/Vanshika.jpg",
     },
     {
       name: "Tanya Mishra",
-      role: "Research Assistant",
-      image: "/team/Tanya.png",
+      role: "Research Analyst and Content Lead",
+      image: "/team/Tanya.jpg",
     },
   ];
 
@@ -56,7 +56,7 @@ const TeamPage = () => {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-24 h-24 rounded-full mb-4 border border-border object-cover"
+                  className="w-32 h-32 rounded-full mb-4 border border-border object-cover"
                 />
 
                 <h3 className="text-xl font-bold text-foreground mb-1">
