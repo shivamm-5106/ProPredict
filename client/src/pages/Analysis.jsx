@@ -116,8 +116,9 @@ const Analysis = () => {
             
             {/* Header */}
             <header className="text-center mb-2 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl font-orbitron font-bold gradient-text">
-                Protein Analysis Pipeline
+              <h1 className="text-4xl md:text-5xl font-orbitron font-bold">
+                <span className="text-white">Protein Analysis</span>{" "}
+                <span className="gradient-text">Pipeline</span>
               </h1>
               <p className="text-muted-foreground mt-2">
                 ESM2 Embedding → Neural Network → Multilabel Classifier

@@ -1,251 +1,213 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React, { useState } from "react";
+import axios from "axios";
+import { Card } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Textarea } from "../components/ui/textarea";
+
 const Predict = () => {
-    const [inputType, setInputType] = useState('text')
-    const [sequence, setSequence] = useState('')
-    const [file, setFile] = useState(null)
-    const [predictions, setPredictions] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
-    const exampleSequence = "MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQAPILSRVGDGTQDNLSGAEKAVQVKVKALPDAQFEVVHSLAKWKRQTLGQHDFSAGEGLYTHMKALRPDEDRLSPLHSVYVDQWDWERVMGDGERQFSTLKSTVEAIWAGIKATEAAVSEEFGLAPFLPDQIHFVHSQELLSRYPDLDAKGRERAIAKDLGAVFLVGIGGKLSDGHRHDVRAPDYDDWSTPSELGHAGLNGDILVWNPVLEDAFELSSMGIRVDADTLKHQLALTGDEDRLELEWHQALLRGEMPQTIGGGIGQSRLTMLLLQLPHIGQVQAGVWPAAVRESVPSLL"
-    const handlePredict = async () => {
-        setError('')
-        setPredictions(null)
-        let sequenceToPredict = sequence
-        if (inputType === 'file' && file) {
-            const reader = new FileReader()
-            reader.onload = async (e) => {
-                const content = e.target.result
-                const lines = content.split('\n')
-                const seq = lines.filter(line => !line.startsWith('>')).join('').trim()
-                sequenceToPredict = seq
-                await executePrediction(sequenceToPredict)
-            }
-            reader.readAsText(file)
-        } else if (inputType === 'text' && sequence) {
-            await executePrediction(sequenceToPredict)
-        } else {
-            setError('Please provide a protein sequence or upload a FASTA file')
-        }
+  const [inputType, setInputType] = useState("text");
+  const [sequence, setSequence] = useState("");
+  const [file, setFile] = useState(null);
+  const [predictions, setPredictions] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const exampleSequence =
+    "MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQAPILSRVGDGTQDNLSGAEKAVQVKVKALPDAQFEVVHSLAKWKRQTLGQHDFSAGEGLYTHMKALRPDEDRLSPLHSVYVDQWDWERVMGDGERQFSTLKSTVEAIWAGIKATEAAVSEEFGLAPFLPDQIHFVHSQELLSRYPDLDAKGRERAIAKDLGAVFLVGIGGKLSDGHRHDVRAPDYDDWSTPSELGHAGLNGDILVWNPVLEDAFELSSMGIRVDADTLKHQLALTGDEDRLELEWHQALLRGEMPQTIGGGIGQSRLTMLLLQLPHIGQVQAGVWPAAVRESVPSLL";
+
+  const handlePredict = async () => {
+    setError("");
+    setPredictions(null);
+    let sequenceToPredict = sequence;
+
+    if (inputType === "file" && file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const content = e.target.result;
+        const lines = content.split("\n");
+        const seq = lines.filter((line) => !line.startsWith(">")).join("").trim();
+        await executePrediction(seq);
+      };
+      reader.readAsText(file);
+    } else if (sequence) {
+      await executePrediction(sequenceToPredict);
+    } else {
+      setError("Please provide a protein sequence or upload a FASTA file");
     }
-    const executePrediction = async (seq) => {
-        if (!seq || seq.length < 10) {
-            setError('Sequence is too short. Please provide a valid protein sequence (minimum 10 amino acids)')
-            return
-        }
-        setLoading(true)
-        try {
-            const response = await axios.post('/api/predict', { sequence: seq })
-            setPredictions(response.data.predictions)
-        } catch (err) {
-            setError('Prediction failed. Please try again.')
-            console.error('Prediction error:', err)
-        } finally {
-            setLoading(false)
-        }
+  };
+
+  const executePrediction = async (seq) => {
+    if (!seq || seq.length < 10) {
+      setError("Sequence is too short. Minimum 10 amino acids required.");
+      return;
     }
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0]
-        if (selectedFile) {
-            if (selectedFile.name.endsWith('.fasta') || selectedFile.name.endsWith('.fa') || selectedFile.name.endsWith('.txt')) {
-                setFile(selectedFile)
-                setError('')
-            } else {
-                setError('Please upload a valid FASTA file (.fasta, .fa, or .txt)')
-                setFile(null)
-            }
-        }
+    setLoading(true);
+
+    try {
+      const response = await axios.post("/api/predict", { sequence: seq });
+      setPredictions(response.data.predictions);
+    } catch (err) {
+      console.error(err);
+      setError("Prediction failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    const loadExample = () => {
-        setInputType('text')
-        setSequence(exampleSequence)
-        setFile(null)
+  };
+
+  const handleFileChange = (e) => {
+    const selected = e.target.files[0];
+    if (!selected) return;
+
+    if (
+      selected.name.endsWith(".fasta") ||
+      selected.name.endsWith(".fa") ||
+      selected.name.endsWith(".txt")
+    ) {
+      setFile(selected);
+      setError("");
+    } else {
+      setError("Invalid file. Only .fasta, .fa, .txt allowed.");
+      setFile(null);
     }
-    return (
-        <div className="animate-fadeIn max-w-5xl mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">Protein Function Prediction Demo</h1>
-            <p className="text-gray-600 mb-8">
-                Upload a FASTA file or paste a protein sequence to predict associated Gene Ontology (GO) terms.
-            </p>
-            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-                {/* Input Type Selection */}
-                <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Input Method:</label>
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => setInputType('text')}
-                            className={`px-6 py-2 rounded-lg font-medium transition-all ${inputType === 'text'
-                                    ? 'bg-purple-600 text-white shadow-md'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                        >
-                            ✏️ Paste Sequence
-                        </button>
-                        <button
-                            onClick={() => setInputType('file')}
-                            className={`px-6 py-2 rounded-lg font-medium transition-all ${inputType === 'file'
-                                    ? 'bg-purple-600 text-white shadow-md'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                        >
-                            📁 Upload FASTA
-                        </button>
-                    </div>
-                </div>
-                {/* Text Input */}
-                {inputType === 'text' && (
-                    <div className="mb-6">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Protein Sequence (amino acids):
-                        </label>
-                        <textarea
-                            value={sequence}
-                            onChange={(e) => setSequence(e.target.value.toUpperCase())}
-                            placeholder="Enter amino acid sequence (e.g., MKTAYIAKQRQISFVK...)"
-                            className="w-full h-40 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
-                        />
-                        <button
-                            onClick={loadExample}
-                            className="mt-2 text-sm text-purple-600 hover:text-purple-800 font-medium"
-                        >
-                            📋 Load Example Sequence
-                        </button>
-                    </div>
-                )}
-                {/* File Input */}
-                {inputType === 'file' && (
-                    <div className="mb-6">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Upload FASTA File:
-                        </label>
-                        <input
-                            type="file"
-                            accept=".fasta,.fa,.txt"
-                            onChange={handleFileChange}
-                            className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-purple-500 transition-colors"
-                        />
-                        {file && (
-                            <p className="mt-2 text-sm text-green-600 flex items-center">
-                                <span className="mr-2">✓</span> File selected: {file.name}
-                            </p>
-                        )}
-                    </div>
-                )}
-                {/* Error Message */}
-                {error && (
-                    <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
-                        <p className="font-medium">⚠️ {error}</p>
-                    </div>
-                )}
-                {/* Submit Button */}
-                <button
-                    onClick={handlePredict}
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                >
-                    {loading ? '🔄 Analyzing Protein...' : '🚀 Predict GO Terms'}
-                </button>
+  };
+
+  return (
+    <main className="flex-1 pt-24 pb-12">
+      <div className="container mx-auto px-4 max-w-6xl space-y-10">
+
+        {/* Header Like Analysis Page */}
+        <header className="text-center animate-fade-in">
+          <h1 className="text-4xl md:text-5xl font-orbitron font-bold">
+            <span className="text-white">Protein Function</span>{" "}
+            <span className="gradient-text">Prediction</span>
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Upload a FASTA file or paste a protein sequence to predict GO terms.
+          </p>
+        </header>
+
+        {/* INPUT CARD — Styled Like PipelineInput */}
+        <Card className="glass-card p-8 hover-glow space-y-6">
+
+          {/* Input Type Switch */}
+          <div className="flex gap-4">
+            <Button
+              variant={inputType === "text" ? "default" : "outline"}
+              onClick={() => setInputType("text")}
+            >
+              ✏️ Paste Sequence
+            </Button>
+
+            <Button
+              variant={inputType === "file" ? "default" : "outline"}
+              onClick={() => setInputType("file")}
+            >
+              📁 Upload FASTA
+            </Button>
+          </div>
+
+          {/* TEXTAREA INPUT */}
+          {inputType === "text" && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Protein Sequence</label>
+              <Textarea
+                value={sequence}
+                onChange={(e) => setSequence(e.target.value.toUpperCase())}
+                className="min-h-[140px] font-mono text-sm bg-input/50"
+                placeholder="Enter amino acid sequence..."
+              />
+              <Button
+                variant="ghost"
+                className="text-primary px-0"
+                onClick={() => setSequence(exampleSequence)}
+              >
+                📋 Load Example Sequence
+              </Button>
             </div>
-            {/* Loading State */}
-            {loading && (
-                <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-                    <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600 mb-4"></div>
-                    <p className="text-gray-600 font-medium">Running ensemble prediction models...</p>
-                    <p className="text-sm text-gray-500 mt-2">ESM-2 + AlphaFold 2 Integration</p>
+          )}
+
+          {/* FILE INPUT */}
+          {inputType === "file" && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Upload FASTA File</label>
+              <input
+                type="file"
+                accept=".fasta,.fa,.txt"
+                onChange={handleFileChange}
+                className="w-full p-4 border border-border rounded-lg bg-input/40 hover:border-primary transition"
+              />
+              {file && (
+                <p className="text-green-500 text-sm mt-1">
+                  ✓ Selected: {file.name}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* ERROR */}
+          {error && (
+            <div className="p-4 bg-red-500/20 border border-red-500 rounded-lg text-red-300">
+              ⚠️ {error}
+            </div>
+          )}
+
+          {/* SUBMIT BUTTON */}
+          <Button
+            disabled={loading}
+            onClick={handlePredict}
+            className="w-full bg-primary hover:bg-primary-glow text-background font-semibold"
+          >
+            {loading ? "Analyzing..." : "🚀 Predict GO Terms"}
+          </Button>
+        </Card>
+
+        {/* LOADING */}
+        {loading && (
+          <Card className="glass-card p-12 text-center">
+            <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-muted-foreground">Running prediction models...</p>
+          </Card>
+        )}
+
+        {/* RESULTS */}
+        {predictions && !loading && (
+          <Card className="glass-card p-8 space-y-6">
+            <h2 className="text-2xl font-orbitron font-bold text-primary">
+              Prediction Results
+            </h2>
+
+            {predictions
+              .filter((p) => p.probability > 0.7)
+              .map((pred, idx) => (
+                <div
+                  key={idx}
+                  className="p-5 border border-border rounded-lg hover-glow"
+                >
+                  <p className="font-mono text-lg text-primary">
+                    {pred.GO_term}
+                  </p>
+                  <p className="text-muted-foreground">{pred.name}</p>
+                  <div className="mt-3">
+                    <div className="flex justify-between text-sm">
+                      <span>Confidence</span>
+                      <span className="text-primary font-bold">
+                        {(pred.probability * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-muted h-2 rounded-full mt-1">
+                      <div
+                        className="bg-primary h-2 rounded-full"
+                        style={{ width: `${pred.probability * 100}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
-            )}
-            {/* Prediction Results */}
-            {predictions && !loading && (
-                <div className="bg-white rounded-lg shadow-lg p-8">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <span className="text-3xl mr-3">📊</span>
-                        Prediction Results
-                    </h2>
+              ))}
+          </Card>
+        )}
+      </div>
+    </main>
+  );
+};
 
-                    {/* Threshold Info Banner */}
-                    <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-semibold text-purple-900">
-                                    🎯 Confidence Threshold: <span className="text-purple-600">0.7 (70%)</span>
-                                </p>
-                                <p className="text-xs text-gray-600 mt-1">
-                                    Only showing predictions with probability greater than 0.7
-                                </p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-2xl font-bold text-purple-600">{predictions.filter(p => p.probability > 0.7).length}</p>
-                                <p className="text-xs text-gray-600">High-confidence<br />predictions</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {predictions.filter(p => p.probability > 0.7).length === 0 && (
-                        <div className="p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg">
-                            <p className="text-yellow-800 font-medium">
-                                ⚠️ No predictions above threshold (0.7)
-                            </p>
-                            <p className="text-sm text-yellow-700 mt-2">
-                                The model did not find any GO terms with confidence greater than 70% for this sequence.
-                                Try a different protein sequence.
-                            </p>
-                        </div>
-                    )}
-
-                    {predictions.filter(p => p.probability > 0.7).length > 0 && (
-                        <p className="text-gray-600 mb-6">
-                            Found <strong>{predictions.filter(p => p.probability > 0.7).length}</strong> GO term predictions with probability <strong>&gt; 0.7</strong>:
-                        </p>
-                    )}
-                    <div className="space-y-4">
-                        {predictions.filter(p => p.probability > 0.7).map((pred, idx) => (
-                            <div
-                                key={idx}
-                                className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow"
-                            >
-                                <div className="flex justify-between items-start mb-3">
-                                    <div>
-                                        <h3 className="font-mono text-lg font-bold text-purple-700">
-                                            {pred.GO_term}
-                                        </h3>
-                                        <p className="text-gray-700 font-medium">{pred.name}</p>
-                                    </div>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${pred.ontology === 'MF' ? 'bg-blue-100 text-blue-700' :
-                                            pred.ontology === 'BP' ? 'bg-green-100 text-green-700' :
-                                                'bg-orange-100 text-orange-700'
-                                        }`}>
-                                        {pred.ontology === 'MF' ? 'Molecular Function' :
-                                            pred.ontology === 'BP' ? 'Biological Process' :
-                                                'Cellular Component'}
-                                    </span>
-                                </div>
-                                <div>
-                                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                                        <span>Confidence Score</span>
-                                        <span className="font-bold text-purple-600">
-                                            {(pred.probability * 100).toFixed(1)}%
-                                        </span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                        <div
-                                            className="bg-gradient-to-r from-purple-600 to-blue-600 h-2.5 rounded-full transition-all duration-500"
-                                            style={{ width: `${pred.probability * 100}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <p className="text-sm text-blue-900">
-                            <strong>💡 Note:</strong> These predictions are generated using the backend API.
-                            In production, the ensemble system combines ESM-2 sequence embeddings and
-                            AlphaFold 2 structural features for enhanced accuracy.
-                        </p>
-                    </div>
-                </div>
-            )}
-        </div>
-    )
-}
-export default Predict
+export default Predict;
